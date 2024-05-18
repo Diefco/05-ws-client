@@ -12,6 +12,14 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
     <span id="server-status"> Offline </span>
 
     <ul id="clients-ul"></ul>
+
+  <form id="message-form">
+     <input type="text" id="message-input" placeholder="message" />
+     <form>
+  </div>
+
+  <h2> Messages </h2>
+  <ul id="messages-ul"></ul>
 `;
 
 // connectToServer();
