@@ -1,23 +1,30 @@
 import { Manager, Socket } from "socket.io-client";
 
-export const connectToServer = () => {
-  const manager = new Manager("http://localhost:3000/socket.io/socket.io.js");
+let socket: Socket;
 
-  const socket = manager.socket("/"); // coneccted to root namespace
+export const connectToServer = (token: string) => {
+  const manager = new Manager("http://localhost:3000/socket.io/socket.io.js", {
+    extraHeaders: {
+      authentication: token,
+    },
+  });
 
-  addListeners(socket);
+  socket?.removeAllListeners();
+  socket = manager.socket("/"); // coneccted to root namespace
+
+  addListeners();
 };
 
-const addListeners = (socket: Socket) => {
+const addListeners = () => {
+  const clientsUL = document.querySelector<HTMLSpanElement>("#clients-ul")!;
   const serverStatusLabel = document.querySelector("#server-status")!;
-  const clientsUL = document.querySelector("#clients-ul")!;
 
   socket.on("connect", () => {
     serverStatusLabel.textContent = "Online";
   });
 
   socket.on("disconnect", () => {
-    serverStatusLabel.textContent = "Offline";
+    serverStatusLabel.textContent = "Disconnected";
   });
 
   socket.on("clients-updated", (clients: string[]) => {
